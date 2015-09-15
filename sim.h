@@ -1,3 +1,41 @@
+
+
+/*
+
+The simplest UI program
+Select Visual C++ CLR and CLR Empty Project 
+and type in RandomNumberGenerator for the project name. The, OK.
+Project->Add New Item... . 
+Select UI under Visual C++.
+Leave the Form name as given by default MyForm.h.
+Then, click Add. 
+
+We need to edit the MyForm.cpp file:
+#include "MyForm.h"
+
+using namespace System;
+using namespace System::Windows::Forms;
+
+
+[STAThread]
+void Main(array<String^>^ args)
+{
+	Application::EnableVisualStyles();
+	Application::SetCompatibleTextRenderingDefault(false);
+
+	RandomNumberGenerator::MyForm form;
+	Application::Run(%form);
+}
+  
+The System namespace provides functions to work with UI controls.
+At the right-mouse click on RandomNumberGenerator, we get the Properties window. 
+Configuration Properties->Linker->System
+Select Windows (/SUBSYSTEM:WINDOWS) for SubSystem.
+Advanced->Entry Point, type in Main.
+The, hit OK.
+
+*/
+
 #pragma once
 
 #include "windows.h"
