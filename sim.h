@@ -69,7 +69,7 @@ void testMarshalString() {
 namespace Project1 {
 
 
-	// visual studio Ô´ÎÄ¼şutf-8 ±àÂë±ØĞëÒªÓĞBOM ²ÅĞĞ
+	// visual studio æºæ–‡ä»¶utf-8 ç¼–ç å¿…é¡»è¦æœ‰BOM æ‰è¡Œ
 	// http://www.unicode.org/cgi-bin/GetUnihanData.pl?codepoint=%E4%B8%A5
 	// https://www.sqlite.org/c3ref/create_function.html
 	// https://github.com/schuyler/levenshtein
@@ -77,8 +77,8 @@ namespace Project1 {
 # define min(x, y) ((x) < (y) ? (x) : (y))
 # define max(x, y) ((x) > (y) ? (x) : (y))
 
-	// Ä³¸öutf8 ×Ö·ûÕ¼¼¸¸ö×Ö½Ú
-	// c: ±ØĞëÖ¸Ïòutf8 ×Ö·û´®
+	// æŸä¸ªutf8 å­—ç¬¦å å‡ ä¸ªå­—èŠ‚
+	// c: å¿…é¡»æŒ‡å‘utf8 å­—ç¬¦ä¸²
 	static int utf8len(char *c) {
 		unsigned char c1 = c[0];
 		int len = -1;
@@ -104,8 +104,8 @@ namespace Project1 {
 	** Assuming z points to the first byte of a UTF-8 character,
 	** advance z to point to the first byte of the next UTF-8 character.
 	*/
-	// ¼ÆËã×Ö·û¸öÊı
-	// ÊµÏÖ²Î¿¼sqlite3 µÄlengthFunc º¯Êı
+	// è®¡ç®—å­—ç¬¦ä¸ªæ•°
+	// å®ç°å‚è€ƒsqlite3 çš„lengthFunc å‡½æ•°
 	static int utf8strlen(char *str) {
 		int len;
 		const  char *z = str;
@@ -123,23 +123,23 @@ namespace Project1 {
 		return len;
 	}
 
-	// utf8 ±àÂë¹æÔò
+	// utf8 ç¼–ç è§„åˆ™
 	/*
-	1×Ö½Ú 0xxxxxxx
-	2×Ö½Ú 110xxxxx 10xxxxxx 0xC0 0x80
-	3×Ö½Ú 1110xxxx 10xxxxxx 10xxxxxx
-	4×Ö½Ú 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-	5×Ö½Ú 111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
-	6×Ö½Ú 1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
+	1å­—èŠ‚ 0xxxxxxx
+	2å­—èŠ‚ 110xxxxx 10xxxxxx 0xC0 0x80
+	3å­—èŠ‚ 1110xxxx 10xxxxxx 10xxxxxx
+	4å­—èŠ‚ 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+	5å­—èŠ‚ 111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
+	6å­—èŠ‚ 1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
 	*/
-	// ¼Ù¶¨z Ö¸ÏòµÚÒ»¸öutf8 ×Ö·û£¬º¯ÊıÖ´ĞĞÍêÒÔºóz Ö¸ÏòÏÂÒ»¸ö×Ö·û
+	// å‡å®šz æŒ‡å‘ç¬¬ä¸€ä¸ªutf8 å­—ç¬¦ï¼Œå‡½æ•°æ‰§è¡Œå®Œä»¥åz æŒ‡å‘ä¸‹ä¸€ä¸ªå­—ç¬¦
 	static char *nextc(char *z) {
 		if (z == 0) { return 0; }
 		if (*z == 0) {
 			return 0;
 		}
 		++z;
-		while ((*z & 0xC0) == 0x80) { ++z; }  // Ö»Òª×î¸ßÎ»ÊÇ10 ¿ªÍ·¾Í¼ÌĞøÒÆ¶¯Ö¸Õë
+		while ((*z & 0xC0) == 0x80) { ++z; }  // åªè¦æœ€é«˜ä½æ˜¯10 å¼€å¤´å°±ç»§ç»­ç§»åŠ¨æŒ‡é’ˆ
 		return z;
 	}
 
@@ -351,14 +351,14 @@ namespace Project1 {
 				 String ^ s1 = this->richTextBox1->Text;
 				 String ^ s2 = this->richTextBox2->Text;
 				 if (s1->Length <= 0 || s2->Length <= 0) {
-					 System::Windows::Forms::MessageBox::Show(L"ÇëÊäÈë×Ö·û´®£¡");
+					 System::Windows::Forms::MessageBox::Show(L"è¯·è¾“å…¥å­—ç¬¦ä¸²ï¼");
 					 return;
 				 }
 				 char *p = newArray(s1);
 				 char *p2 = newArray(s2);
 				 String ^sp = System::String(p).ToString();
 				 double similar = sim(p, p2);
-				 System::Windows::Forms::MessageBox::Show(L"ÏàËÆ¶È£º" + similar.ToString());
+				 System::Windows::Forms::MessageBox::Show(L"ç›¸ä¼¼åº¦ï¼š" + similar.ToString());
 				 free(p);
 				 free(p2);
 	}
