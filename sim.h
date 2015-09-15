@@ -1,40 +1,38 @@
 
 
 /*
-
 The simplest UI program
-Select Visual C++ CLR and CLR Empty Project 
+Select Visual C++ CLR and CLR Empty Project
 and type in RandomNumberGenerator for the project name. The, OK.
-Project->Add New Item... . 
+Project->Add New Item... .
 Select UI under Visual C++.
 Leave the Form name as given by default MyForm.h.
-Then, click Add. 
-
+Then, click Add.
 We need to edit the MyForm.cpp file:
 #include "MyForm.h"
-
 using namespace System;
 using namespace System::Windows::Forms;
-
-
 [STAThread]
 void Main(array<String^>^ args)
 {
-	Application::EnableVisualStyles();
-	Application::SetCompatibleTextRenderingDefault(false);
-
-	RandomNumberGenerator::MyForm form;
-	Application::Run(%form);
+Application::EnableVisualStyles();
+Application::SetCompatibleTextRenderingDefault(false);
+RandomNumberGenerator::MyForm form;
+Application::Run(%form);
 }
-  
+
 The System namespace provides functions to work with UI controls.
-At the right-mouse click on RandomNumberGenerator, we get the Properties window. 
+At the right-mouse click on RandomNumberGenerator, we get the Properties window.
 Configuration Properties->Linker->System
 Select Windows (/SUBSYSTEM:WINDOWS) for SubSystem.
 Advanced->Entry Point, type in Main.
 The, hit OK.
-
 */
+
+// visual studio 源文件utf-8 编码必须要有BOM 才行
+// http://www.unicode.org/cgi-bin/GetUnihanData.pl?codepoint=%E4%B8%A5
+// https://www.sqlite.org/c3ref/create_function.html
+// https://github.com/schuyler/levenshtein
 
 #pragma once
 
@@ -146,7 +144,7 @@ namespace Project1 {
 	// 实现参考sqlite3 的lengthFunc 函数
 	static int utf8strlen(char *str) {
 		int len;
-		const  char *z = str;
+		const unsigned char *z = (const unsigned char *)str;
 		if (z == 0) {
 			return -1;
 		}
@@ -283,6 +281,7 @@ namespace Project1 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Text;
 
 	/// <summary>
 	/// Summary for MyForm
@@ -384,6 +383,18 @@ namespace Project1 {
 			return p;
 		}
 
+			static Encoding^ GBKEndoding()
+			{
+				return Encoding::GetEncoding("gb18030");
+			}
+			static Encoding^ Utf8Endoding()
+			{
+				return Encoding::GetEncoding("utf-8");
+			}
+			static String^ gbk2utf8(String^ s) {
+				return Utf8Endoding()->GetString(Encoding::Convert(GBKEndoding(), Utf8Endoding(), GBKEndoding()->GetBytes(s)));
+			}
+
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 
 				 String ^ s1 = this->richTextBox1->Text;
@@ -392,9 +403,14 @@ namespace Project1 {
 					 System::Windows::Forms::MessageBox::Show(L"请输入字符串！");
 					 return;
 				 }
+				 s1 = gbk2utf8(s1);
+				 s2 = gbk2utf8(s2);
+				 array<unsigned char, 1> ^a = System::Text::UTF8Encoding().GetBytes(s1);
 				 char *p = newArray(s1);
 				 char *p2 = newArray(s2);
-				 String ^sp = System::String(p).ToString();
+				 int len1 = utf8strlen(p);
+				 int len2 = utf8strlen(p2);
+				 //String ^sp = System::String(p).ToString();
 				 double similar = sim(p, p2);
 				 System::Windows::Forms::MessageBox::Show(L"相似度：" + similar.ToString());
 				 free(p);
